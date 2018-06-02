@@ -5,20 +5,17 @@ import tensorflow as tf
 class Neotx():
     def __init__(self):
         self.filters_discriminator = [ 5]
-        self.filters_generator = [3]
+        self.filters_generator = [5]
         self.init_depth_of_discriminator = 16
-        self.init_depth_of_generator = 256
+        self.init_depth_of_generator = 512
         self._BATCH_NORM_DECAY = 0.997
         self._BATCH_NORM_EPSILON = 1e-5
 
     def batch_normalization_layer(self, layer, is_training):
         gamma_init = tf.random_normal_initializer(1., 0.02)
-        #layer = tf.layers.batch_normalization(layer, epsilon=1e-12, gamma_initializer=gamma_init,
-        #                                      training=is_training)
-
-        layer = tf.layers.batch_normalization( inputs=layer, momentum=self._BATCH_NORM_DECAY,
+        layer = tf.layers.batch_normalization(inputs=layer, momentum=self._BATCH_NORM_DECAY,
                                        epsilon=self._BATCH_NORM_EPSILON, center=True, scale=True,
-                                       training=is_training)
+                                               gamma_initializer=gamma_init, training=is_training)
         return tf.nn.leaky_relu(layer, 0.2)
 
     def get_neoxt_conv2d_transpose_layer(self, current_layers, depth, filters, apply_batch_normalization
